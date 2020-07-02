@@ -12,11 +12,10 @@ def euclidean_distance(A, B):
 
     by: Szymon Jacoń
     """
-    return ((A[0] - B[0]) ** 2 + (A[1] - B[1]) ** 2) ** 0.5
+    return np.sum((A - B) ** 2) ** 0.5
 
 
 def increse(number):
-
     number = str(number)
     if len(number) == 5:
         return number
@@ -49,7 +48,8 @@ def make_gif(path_to_catalog_with_plots, gif_name):
         frames.append(new_frame)
 
     # Save into a GIF file that loops forever
-    frames[0].save('../gify/' + gif_name + '.gif', format='GIF', save_all=True, duration=1, loop=0, append_images=frames[1:])
+    frames[0].save('../gify/' + gif_name + '.gif', format='GIF', save_all=True, duration=1, loop=0,
+                   append_images=frames[1:])
 
 
 def prepare_data(file_to_change, new_file, delimiter, every_n_row):
@@ -76,3 +76,17 @@ def prepare_data(file_to_change, new_file, delimiter, every_n_row):
     tmp = np.asarray(tmp)
 
     np.savetxt(new_file, tmp)
+
+
+def make_matrix(vector1, vector2, sigma):
+    matrix = np.empty((len(vector1), len(vector2)))
+
+    for indexA, datumA in enumerate(vector1):
+        for indexB, datumB in enumerate(vector2):
+            matrix[indexA, indexB] = gauss_function(euclidean_distance(datumA, datumB), sigma[indexB])
+
+    return matrix
+
+
+def gauss_function(r, sigma_f):
+    return np.exp(-(r ** 2) / (2 * sigma_f ** 2))
